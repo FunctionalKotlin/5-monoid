@@ -11,6 +11,15 @@ infix operator fun <T, E> (Validator<T, E>).plus(validator: Validator<T, E>): Va
     }
 }
 
+infix fun <A, E> (Validator<A, E>).or(validator: Validator<A, E>): Validator<A, E> = {
+    val result = this(it)
+
+    when(result) {
+        is Success -> result
+        is Failure -> validator(it)
+    }
+}
+
 fun <A> validate(with: (A) -> Boolean): (A) -> A? = { it.takeIf(with) }
 
 infix fun <A, E> ((A) -> A?).orElseFail(with: E): Validator<A, E> = { a ->
@@ -25,4 +34,12 @@ object Validators {
     val Password: Validator<User, UserError> =
         validate<User> { it.password.length > 10 }
             .orElseFail(with = UserError.PASSWORD_TOO_SHORT)
+
+    val Premium: Validator<User, UserError> =
+        validate<User>(with = { it.premium })
+            .orElseFail(with = UserError.MUST_BE_PREMIUM)
+
+    val Newsletter: Validator<User, UserError> =
+        validate<User>(with = { it.newsletter })
+            .orElseFail(with = UserError.MUST_BE_PREMIUM)
 }
