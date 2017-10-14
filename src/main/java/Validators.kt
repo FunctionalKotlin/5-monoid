@@ -11,12 +11,18 @@ infix operator fun <T, E> (Validator<T, E>).plus(validator: Validator<T, E>): Va
     }
 }
 
-fun validateName(user: User): Result<User, UserError> = user
-    .takeIf { !user.name.isEmpty() && user.name.length <= 15 }
-    ?.let(::Success)
-    ?: Failure(UserError.USERNAME_OUT_OF_BOUNDS)
+fun <A> validate(with: (A) -> Boolean): (A) -> A? = { it.takeIf(with) }
 
-fun validatePassword(user: User): Result<User, UserError> = user
-    .takeIf { user.password.length > 10 }
-    ?.let(::Success)
-    ?: Failure(UserError.PASSWORD_TOO_SHORT)
+infix fun <A, E> ((A) -> A?).orElseFail(with: E): Validator<A, E> = { a ->
+    this(a)?.let(::Success) ?: Failure(with)
+}
+
+object Validators {
+    val Name: Validator<User, UserError> =
+        validate<User> { !it.name.isEmpty() && it.name.length <= 15 }
+            .orElseFail(with = UserError.USERNAME_OUT_OF_BOUNDS)
+
+    val Password: Validator<User, UserError> =
+        validate<User> { it.password.length > 10 }
+            .orElseFail(with = UserError.PASSWORD_TOO_SHORT)
+}

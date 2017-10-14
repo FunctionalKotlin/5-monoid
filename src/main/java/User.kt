@@ -1,5 +1,8 @@
 // Copyright © FunctionalKotlin.com 2017. All rights reserved.
 
+import Validators.Name
+import Validators.Password
+
 data class User(val name: String, val password: String)
 
 enum class UserError {
@@ -7,4 +10,4 @@ enum class UserError {
 }
 
 fun createUser(name: String, password: String): Result<User, UserError> =
-    User(name, password).let(::validateName + ::validatePassword)
+    User(name, password).let(Name + Password)
