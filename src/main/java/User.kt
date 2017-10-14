@@ -18,12 +18,6 @@ class AddUserUseCase {
 
         val validator = ::validateName + ::validatePassword
 
-        val failure = validator(user)
-
-        if (failure != null) {
-            return Failure(failure)
-        }
-
-        return Success(db.create(user))
+        return validator(user).map(db::create)
     }
 }
