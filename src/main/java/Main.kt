@@ -5,5 +5,5 @@ fun main(args: Array<String>) {
 
     useCase.add("alex", "functionalkotlin")
         .map { it.name }
-        .ifPresent { println(it) }
+        .ifSuccess { println(it) }
 }
