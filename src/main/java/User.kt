@@ -9,13 +9,7 @@ class UserDatabase {
 class AddUserUseCase {
     private val db = UserDatabase()
 
-    fun add(name: String, password: String): Boolean {
-        if (validateName(name) && validatePassword(password)) {
-            db.create(User(name, password))
-
-            return true
-        }
-
-        return false
-    }
+    fun add(name: String, password: String): User? = User(name, password)
+        .takeIf { validateName(name) && validatePassword(password) }
+        ?.let(db::create)
 }
