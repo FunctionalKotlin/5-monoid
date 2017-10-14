@@ -14,20 +14,16 @@ class AddUserUseCase {
     private val db = UserDatabase()
 
     fun add(name: String, password: String): Result<User, UserError> {
-        val nameFailure = validateName(name)
+        val user = User(name, password)
 
-        if (nameFailure != null) {
-            return Failure(nameFailure)
+        val validator = ::validateName + ::validatePassword
+
+        val failure = validator(user)
+
+        if (failure != null) {
+            return Failure(failure)
         }
 
-        val passwordFailure = validatePassword(password)
-
-        if (passwordFailure != null) {
-            return Failure(passwordFailure)
-        }
-
-        return User(name, password)
-            .let(db::create)
-            .let(::Success)
+        return Success(db.create(user))
     }
 }
