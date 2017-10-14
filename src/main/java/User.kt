@@ -6,18 +6,5 @@ enum class UserError {
     PASSWORD_TOO_SHORT, USERNAME_OUT_OF_BOUNDS
 }
 
-class UserDatabase {
-    fun create(user: User): User = user
-}
-
-class AddUserUseCase {
-    private val db = UserDatabase()
-
-    fun add(name: String, password: String): Result<User, UserError> {
-        val user = User(name, password)
-
-        val validator = ::validateName + ::validatePassword
-
-        return validator(user).map(db::create)
-    }
-}
+fun createUser(name: String, password: String): Result<User, UserError> =
+    User(name, password).let(::validateName + ::validatePassword)
