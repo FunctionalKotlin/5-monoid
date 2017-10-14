@@ -26,6 +26,9 @@ infix fun <A, E> ((A) -> A?).orElseFail(with: E): Validator<A, E> = { a ->
     this(a)?.let(::Success) ?: Failure(with)
 }
 
+fun <A, E> allOf(vararg validators: Validator<A, E>): Validator<A, E> =
+    validators.fold(::Success) { acc, validator -> acc + validator }
+
 object Validators {
     val Name: Validator<User, UserError> =
         validate<User> { !it.name.isEmpty() && it.name.length <= 15 }

@@ -15,4 +15,4 @@ enum class UserError {
 }
 
 fun createUser(name: String, password: String, premium: Boolean, newsletter: Boolean): Result<User, UserError> =
-    User(name, password, premium, newsletter).let(Name + Password + (Premium or Newsletter))
+    User(name, password, premium, newsletter).let(allOf(Name, Password, (Premium or Newsletter)))
