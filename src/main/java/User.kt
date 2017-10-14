@@ -9,7 +9,9 @@ class UserDatabase {
 class AddUserUseCase {
     private val db = UserDatabase()
 
-    fun add(name: String, password: String): User? = User(name, password)
+    fun add(name: String, password: String): Option<User> = User(name, password)
         .takeIf { validateName(name) && validatePassword(password) }
         ?.let(db::create)
+        ?.let(::Just)
+        ?: None
 }

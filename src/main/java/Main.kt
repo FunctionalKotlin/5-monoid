@@ -3,7 +3,7 @@
 fun main(args: Array<String>) {
     val useCase = AddUserUseCase()
 
-    val user = useCase.add("alex", "functionalkotlin")
-
-    user?.let(::println)
+    useCase.add("alex", "functionalkotlin")
+        .map { it.name }
+        .ifPresent { println(it) }
 }
