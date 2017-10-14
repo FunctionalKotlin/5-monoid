@@ -2,10 +2,6 @@
 
 data class User(val name: String, val password: String)
 
-sealed class UserException: Exception()
-class PasswordTooShortException: UserException()
-class UserNameOutOfBoundsException: UserException()
-
 class UserDatabase {
     fun create(user: User): User = user
 }
@@ -13,10 +9,13 @@ class UserDatabase {
 class AddUserUseCase {
     private val db = UserDatabase()
 
-    fun add(name: String, password: String): User {
-        validateName(name)
-        validatePassword(password)
+    fun add(name: String, password: String): Boolean {
+        if (validateName(name) && validatePassword(password)) {
+            db.create(User(name, password))
 
-        return db.create(User(name, password))
+            return true
+        }
+
+        return false
     }
 }

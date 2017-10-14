@@ -3,13 +3,9 @@
 fun main(args: Array<String>) {
     val useCase = AddUserUseCase()
 
-    try {
-        val user = useCase.add("alex", "functionalkotlin")
-
-        println(user)
-    } catch(exception: UserNameOutOfBoundsException) {
-        println("User(name, password)")
-    } catch(exception: PasswordTooShortException) {
-        println("ERROR: Password too short")
+    if (useCase.add("alex", "functionalkotlin")) {
+        println("SUCCESS: User created")
+    } else {
+        println("ERROR: Something is wrong")
     }
 }

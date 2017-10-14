@@ -1,13 +1,5 @@
 // Copyright © FunctionalKotlin.com 2017. All rights reserved.
 
-fun validateName(name: String) {
-    if (name.isEmpty() || name.length > 15) {
-        throw UserNameOutOfBoundsException()
-    }
-}
+fun validateName(name: String): Boolean = !name.isEmpty() && name.length <= 15
 
-fun validatePassword(password: String) {
-    if (password.length < 10) {
-        throw PasswordTooShortException()
-    }
-}
+fun validatePassword(password: String): Boolean = password.length > 10
